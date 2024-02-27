@@ -1,0 +1,34 @@
+types:
+    idls:
+        - >
+            struct DDSROSMsg
+            {
+                string data;
+            };
+systems:
+    dds: { type: fastdds }
+    ros1: { type: ros1 }
+
+routes:
+    ros1_to_dds: { from: ros1, to: dds }
+    dds_to_ros1: { from: dds, to: ros1 }
+
+topics:
+    dds_specifications: {
+        type: "std_msgs/String",
+        route: ros1_to_dds,
+        remap: {
+            dds: { type: DDSROSMsg, topic: DDSROSTopic },
+            ros1: { topic: "DDSROSTopic" }
+        }
+    }
+
+    ros1_specifications: {
+        type: "std_msgs/String",
+        route: dds_to_ros1,
+        remap: {
+            dds: { type: DDSROSMsg, topic: DDSROSTopic },
+            ros1: { topic: "DDSROSTopic" }
+        }
+    }
+
